@@ -1,7 +1,10 @@
 # Publishes to PyPI when a version tag is pushed:  git tag v0.1.0 && git push --tags
-# Uses PyPI Trusted Publishing — no token stored anywhere. One-time setup on pypi.org:
-#   Your projects → llm-apimaster → Publishing → add a GitHub publisher:
-#     owner=<org>, repository=llm-apimaster, workflow=release.yml, environment=pypi
+# Uses PyPI Trusted Publishing — no token stored anywhere. The project does not need to
+# exist yet: register a *pending* publisher and the first tag creates it.
+#   pypi.org → Your account → Publishing → Add a new pending publisher (GitHub):
+#     PyPI project name=llm-apimaster, owner=apimaster-ai, repository=llm-apimaster,
+#     workflow=release.yml, environment=pypi
+# and create an environment named `pypi` in this repository's settings.
 name: release
 
 on:
