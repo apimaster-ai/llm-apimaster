@@ -1,0 +1,31 @@
+[project]
+name = "llm-apimaster"
+version = "0.1.0"
+description = "llm plugin for APIMaster and other OpenAI-compatible gateways, including image and video generation"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+  "llm>=0.26",
+]
+
+[project.urls]
+Homepage = "https://github.com/apimaster-ai/llm-apimaster"
+Issues = "https://github.com/apimaster-ai/llm-apimaster/issues"
+CHANGELOG = "https://github.com/apimaster-ai/llm-apimaster/releases"
+
+[project.entry-points.llm]
+apimaster = "llm_apimaster"
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-httpx"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["llm_apimaster"]

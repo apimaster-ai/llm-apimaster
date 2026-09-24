@@ -1,0 +1,39 @@
+# Publishes to PyPI when a version tag is pushed:  git tag v0.1.0 && git push --tags
+# Uses PyPI Trusted Publishing — no token stored anywhere. One-time setup on pypi.org:
+#   Your projects → llm-apimaster → Publishing → add a GitHub publisher:
+#     owner=<org>, repository=llm-apimaster, workflow=release.yml, environment=pypi
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -e '.[test]'
+      - run: python -m pytest tests/ -q
+      - name: Tag must match pyproject.toml
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          ver="$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")"
+          [ "$tag" = "$ver" ] || { echo "tag v$tag != pyproject $ver"; exit 1; }
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install build && python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1
